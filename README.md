@@ -6,43 +6,21 @@ This repository contains a Swift API for Gym Retro.
 
 ### Prerequisites
 
-#### Retro
-
-If `libretro.so` or `libretro.dylib` is not in your 
-`LD_LIBRARY_PATH`, you need to provide the following 
-extra flags when using `swift build` or any other SwiftPM 
-command: `-Xlinker -L<path>`, where `<path>` represents the 
-path to the dynamic library. For MacOS, you also need to 
-use the following flags: `-Xlinker -rpath -Xlinker <path>`.
-The simplest way to start is to execute the following 
-commands from within your code directory:
+`Retro` depends on the native Gym Retro library and on
+[GLFW](https://www.glfw.org/) which is used for rendering.
+The native Gym Retro library can be installed by executing
+the following commands in a temporary working directory:
 
 ```bash
 git clone git@github.com:eaplatanios/retro.git
 cd retro
 git checkout c-api
 cmake . -G 'Unix Makefiles' -DBUILD_PYTHON=OFF -DBUILD_C=ON
-make -j4 retro-c
-
-# The following is also necessary when you are on MacOS:
-install_name_tool -id "$(pwd)/libretro.dylib" libretro.dylib
+make -j8 retro-c
+make install
 ```
 
-This will result in a `libretro.so` or `libretro.dylib` 
-file in the `retro` subdirectory and in compiled core files 
-for multiple gaming platforms in the `retro/cores`
-subdirectory. Then you can set `<path>` to 
-`<repository>/retro`, where `<repository>` is the path 
-where you cloned the Swift Retro repository.
-
-#### GLFW
-
-**NOTE:** The GLFW flag is not currently working and so the 
-GLFW library needs to be installed in order to use 
-`retro-swift`.
-
-In order to use the image renderer you need to first 
-install GLFW. You can do so, as follows:
+GLFW can be installed by executing the following commands:
 
 ```bash
 # For MacOS:
@@ -52,37 +30,19 @@ brew install --HEAD git glfw3
 sudo apt install libglfw3-dev libglfw3
 ```
 
-Then, in order to use it you need to provide the following
-extra flags when using `swift build` or any other SwiftPM 
-command: `-Xcc -DGLFW -Xswiftc -DGLFW`. Furthermore, if 
-`libglfw.so` or `libglfw.dylib` is not in your 
-`LD_LIBRARY_PATH`, you also need to provide the following 
-flags: `-Xlinker -lglfw -Xlinker -L<path>`, where `<path>` 
-represents the path to the dynamic library. For example:
+After having installed these libraries you should be able
+to use this library.
 
-```bash
-swift test \
-  -Xcc -DGLFW -Xswiftc -DGLFW \
-  -Xlinker -lglfw -Xlinker -L/usr/local/lib
-```
+**NOTE:** The Swift Package Manager uses `pkg-config` to 
+locate the installed libraries and so you need to make sure
+that `pkg-config` is configured correctly. That may require
+you to set the `PKG_CONFIG_PATH` environment variable
+correctly.
 
-**Note:** If the rendered image does not update according 
+**NOTE:** If the rendered image does not update according 
 to the specified frames per second value and you are using 
 MacOS 10.14, you should update to 10.14.4 because there is 
 a bug in previous releases of 10.14 which breaks VSync.
-
-### Example
-
-This is how I can get things set up on my MacBook:
-
-```bash
-git clone git@github.com:eaplatanios/retro.git
-cd retro
-git checkout c-api
-cmake . -G 'Unix Makefiles' -DBUILD_PYTHON=OFF -DBUILD_C=ON
-make -j4 retro-c
-make install
-```
 
 ## Example
 

@@ -24,7 +24,7 @@ let package = Package(
         .systemLibrary(
           name: "CRetro",
           path: "Sources/CRetro",
-          pkgConfig: "retro"),
+          pkgConfig: "retro-c"),
         .target(
             name: "Retro",
             dependencies: ["CRetro", "ReinforcementLearning", "Gzip", "ZIPFoundation"],
